@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>초등 6학년 사계절 영어 시 자료실</title>
+  <style>
+    :root {
+      --spring-bg: #fff5f7;
+      --spring-main: #ff7597;
+      --summer-bg: #f0fdf4;
+      --summer-main: #10b981;
+      --autumn-bg: #fffbe6;
+      --autumn-main: #d97706;
+      --winter-bg: #f0f9ff;
+      --winter-main: #0284c7;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Malgun Gothic', sans-serif; }
+    body { background-color: #f8fafc; color: #334155; padding: 20px; }
+
+    header { text-align: center; margin-bottom: 25px; }
+    header h1 { color: #1e293b; font-size: 1.8rem; margin-bottom: 8px; }
+    header p { color: #64748b; font-size: 0.95rem; }
+
+    /* Category Buttons */
+    .category-tabs { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 25px; }
+    .tab-btn {
+      border: 2px solid #e2e8f0; background: white; padding: 10px 18px; border-radius: 20px;
+      font-size: 1rem; font-weight: bold; cursor: pointer; transition: all 0.2s;
+    }
+    .tab-btn.active[data-season="all"] { background: #475569; color: white; border-color: #475569; }
+    .tab-btn.active[data-season="spring"] { background: var(--spring-main); color: white; border-color: var(--spring-main); }
+    .tab-btn.active[data-season="summer"] { background: var(--summer-main); color: white; border-color: var(--summer-main); }
+    .tab-btn.active[data-season="autumn"] { background: var(--autumn-main); color: white; border-color: var(--autumn-main); }
+    .tab-btn.active[data-season="winter"] { background: var(--winter-main); color: white; border-color: var(--winter-main); }
+
+    /* Grid Layout */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; max-width: 1100px; margin: 0 auto; }
+    .poem-card {
+      background: white; border-radius: 16px; padding: 20px; border: 2px solid #f1f5f9;
+      cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; text-align: center;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+    .poem-card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+    .poem-card[data-season="spring"] { border-top: 6px solid var(--spring-main); }
+    .poem-card[data-season="summer"] { border-top: 6px solid var(--summer-main); }
+    .poem-card[data-season="autumn"] { border-top: 6px solid var(--autumn-main); }
+    .poem-card[data-season="winter"] { border-top: 6px solid var(--winter-main); }
+
+    .card-icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .card-title { font-size: 1.1rem; font-weight: bold; color: #1e293b; margin-bottom: 6px; }
+    .card-desc { font-size: 0.85rem; color: #64748b; }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5);
+      display: none; justify-content: center; align-items: center; z-index: 1000; padding: 15px;
+    }
+    .modal-content {
+      background: white; border-radius: 20px; width: 100%; max-width: 550px; max-height: 90vh;
+      overflow-y: auto; padding: 25px; position: relative; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+    }
+    .close-btn { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; cursor: pointer; border: none; background: none; color: #94a3b8; }
+    
+    .modal-header { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #f1f5f9; }
+    .modal-header h2 { font-size: 1.4rem; color: #0f172a; margin-top: 5px; }
+
+    .tts-controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+    .btn-play { background: #2563eb; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+    .btn-play:hover { background: #1d4ed8; }
+
+    .poem-lines { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
+    .poem-line { background: #f8fafc; padding: 10px 14px; border-radius: 10px; border-left: 4px solid #cbd5e1; }
+    .line-en { font-weight: bold; font-size: 1.05rem; color: #1e293b; margin-bottom: 3px; }
+    .line-ko { font-size: 0.9rem; color: #64748b; }
+
+    .vocab-section { background: #f1f5f9; padding: 15px; border-radius: 12px; }
+    .vocab-title { font-size: 0.95rem; font-weight: bold; color: #334155; margin-bottom: 8px; }
+    .vocab-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .vocab-tag { background: white; padding: 4px 10px; border-radius: 15px; font-size: 0.85rem; border: 1px solid #e2e8f0; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🌸 사계절 영어 시(Poem) 자료실 ❄️</h1>
+    <p>원하는 계절의 장면 카드를 클릭하면 영어 시와 발음을 확인할 수 있어요!</p>
+  </header>
+
+  <div class="category-tabs">
+    <button class="tab-btn active" data-season="all">전체 (20)</button>
+    <button class="tab-btn" data-season="spring">🌸 봄 (5)</button>
+    <button class="tab-btn" data-season="summer">☀️ 여름 (5)</button>
+    <button class="tab-btn" data-season="autumn">🍁 가을 (5)</button>
+    <button class="tab-btn" data-season="winter">❄️ 겨울 (5)</button>
+  </div>
+
+  <div class="card-grid" id="cardGrid"></div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content">
+      <button class="close-btn" id="closeBtn">&times;</button>
+      <div class="modal-header">
+        <span id="modalIcon" style="font-size: 2.5rem;"></span>
+        <h2 id="modalTitle"></h2>
+      </div>
+      <div class="tts-controls">
+        <button class="btn-play" id="btnPlayAll">🔊 전체 낭송 듣기</button>
+      </div>
+      <div class="poem-lines" id="poemLines"></div>
+      <div class="vocab-section">
+        <div class="vocab-title">📌 핵심 단어 정리</div>
+        <div class="vocab-tags" id="vocabTags"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const poemsData = [
+      // 봄 5개
+      { season: 'spring', icon: '🌸', title: '벚꽃잎이 흩날리는 호숫가', lines: [
+        { en: 'Spring, spring.', ko: '봄, 봄.' },
+        { en: 'Spring is here.', ko: '봄이 왔어요.' },
+        { en: 'I like spring because I can see pink cherry blossoms.', ko: '나는 분홍색 벚꽃을 볼 수 있어서 봄을 좋아해요.' },
+        { en: 'The leaves fly over the blue lake.', ko: '꽃잎들이 푸른 호수 위로 날아가요.' },
+        { en: 'The weather is nice and warm.', ko: '날씨가 좋고 따뜻해요.' },
+        { en: 'Spring is my favorite season.', ko: '봄은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['cherry blossom (벚꽃)', 'lake (호수)', 'fly (날다)', 'warm (따뜻한)'] },
+      
+      { season: 'spring', icon: '🌼', title: '노란 유채꽃이 가득한 들판', lines: [
+        { en: 'Spring, spring.', ko: '봄, 봄.' },
+        { en: 'Spring is here.', ko: '봄이 왔어요.' },
+        { en: 'I like spring because I can see yellow canola flowers.', ko: '나는 노란 유채꽃을 볼 수 있어서 봄을 좋아해요.' },
+        { en: 'The whole field is bright yellow.', ko: '들판 전체가 밝은 노란색이에요.' },
+        { en: 'The sun shines warmly on me.', ko: '햇살이 나를 따뜻하게 비춰요.' },
+        { en: 'Spring is my favorite season.', ko: '봄은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['canola (유채)', 'field (들판)', 'bright (밝은)', 'shine (비추다)'] },
+
+      { season: 'spring', icon: '🌱', title: '새싹이 돋아나는 햇살 공원', lines: [
+        { en: 'Spring, spring.', ko: '봄, 봄.' },
+        { en: 'Spring is here.', ko: '봄이 왔어요.' },
+        { en: 'I like spring because I can see fresh green shoots.', ko: '나는 파릇파릇한 새싹을 볼 수 있어서 봄을 좋아해요.' },
+        { en: 'Little plants wake up in the park.', ko: '작은 식물들이 공원에서 깨어나요.' },
+        { en: 'The breeze is soft and gentle.', ko: '산들바람이 부드럽고 가벼워요.' },
+        { en: 'Spring is my favorite season.', ko: '봄은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['shoot (새싹)', 'plant (식물)', 'wake up (깨어나다)', 'breeze (산들바람)'] },
+
+      { season: 'spring', icon: '🌷', title: '알록달록 튤립이 만발한 정원', lines: [
+        { en: 'Spring, spring.', ko: '봄, 봄.' },
+        { en: 'Spring is here.', ko: '봄이 왔어요.' },
+        { en: 'I like spring because I can see colorful tulips.', ko: '나는 알록달록한 튤립을 볼 수 있어서 봄을 좋아해요.' },
+        { en: 'The flowers are red, yellow, and purple.', ko: '꽃들이 빨간색, 노란색, 보라색이에요.' },
+        { en: 'Butterflies fly around the garden.', ko: '나비들이 정원 주위를 날아다녀요.' },
+        { en: 'Spring is my favorite season.', ko: '봄은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['tulip (튤립)', 'colorful (알록달록한)', 'butterfly (나비)', 'garden (정원)'] },
+
+      { season: 'spring', icon: '🧺', title: '따뜻한 봄바람 부는 소풍장', lines: [
+        { en: 'Spring, spring.', ko: '봄, 봄.' },
+        { en: 'Spring is here.', ko: '봄이 왔어요.' },
+        { en: 'I like spring because I can go on a picnic.', ko: '나는 소풍을 갈 수 있어서 봄을 좋아해요.' },
+        { en: 'I eat sweet strawberries with my friends.', ko: '나는 친구들과 달콤한 딸기를 먹어요.' },
+        { en: 'The wind blows softly today.', ko: '오늘은 바람이 부드럽게 불어요.' },
+        { en: 'Spring is my favorite season.', ko: '봄은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['picnic (소풍)', 'strawberry (딸기)', 'blow (불다)', 'softly (부드럽게)'] },
+
+      // 여름 5개
+      { season: 'summer', icon: '🏖️', title: '시원한 바닷가와 모래성', lines: [
+        { en: 'Summer, summer.', ko: '여름, 여름.' },
+        { en: 'Summer is here.', ko: '여름이 왔어요.' },
+        { en: 'I like summer because I can play at the beach.', ko: '나는 바닷가에서 놀 수 있어서 여름을 좋아해요.' },
+        { en: 'The ocean is blue and cool.', ko: '바다는 푸르고 시원해요.' },
+        { en: 'I build a big sandcastle.', ko: '나는 큰 모래성을 쌓아요.' },
+        { en: 'Summer is my favorite season.', ko: '여름은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['beach (바닷가)', 'ocean (바다)', 'build (짓다/쌓다)', 'sandcastle (모래성)'] },
+
+      { season: 'summer', icon: '🍦', title: '상큼한 아이스크림 가게', lines: [
+        { en: 'Summer, summer.', ko: '여름, 여름.' },
+        { en: 'Summer is here.', ko: '여름이 왔어요.' },
+        { en: 'I like summer because I can eat sweet ice cream.', ko: '나는 달콤한 아이스크림을 먹을 수 있어서 여름을 좋아해요.' },
+        { en: 'The flavors are strawberry and chocolate.', ko: '맛은 딸기맛과 초코맛이에요.' },
+        { en: 'It melts fast under the hot sun.', ko: '뜨거운 햇빛 아래서 금방 녹아요.' },
+        { en: 'Summer is my favorite season.', ko: '여름은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['flavor (맛)', 'melt (녹다)', 'fast (빠르게)', 'sun (햇빛)'] },
+
+      { season: 'summer', icon: '🍉', title: '달콤한 수박을 먹는 마루', lines: [
+        { en: 'Summer, summer.', ko: '여름, 여름.' },
+        { en: 'Summer is here.', ko: '여름이 왔어요.' },
+        { en: 'I like summer because I can eat cold watermelon.', ko: '나는 시원한 수박을 먹을 수 있어서 여름을 좋아해요.' },
+        { en: 'The fruit is red and juicy.', ko: '열매는 빨갛고 즙이 많아요.' },
+        { en: 'It makes me feel cool inside.', ko: '나를 속까지 시원하게 해줘요.' },
+        { en: 'Summer is my favorite season.', ko: '여름은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['watermelon (수박)', 'fruit (과일/열매)', 'juicy (즙이 많은)', 'cool (시원한)'] },
+
+      { season: 'summer', icon: '🏊‍♂️', title: '신나는 야외 수영장', lines: [
+        { en: 'Summer, summer.', ko: '여름, 여름.' },
+        { en: 'Summer is here.', ko: '여름이 왔어요.' },
+        { en: 'I like summer because I can swim in the pool.', ko: '나는 수영장에서 수영을 할 수 있어서 여름을 좋아해요.' },
+        { en: 'The blue water splashes everywhere.', ko: '파란 물이 어디로든 튀어요.' },
+        { en: 'I play with my friends happily.', ko: '나는 친구들과 즐겁게 놀아요.' },
+        { en: 'Summer is my favorite season.', ko: '여름은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['swim (수영하다)', 'pool (수영장)', 'splash (튀기다)', 'happily (즐겁게)'] },
+
+      { season: 'summer', icon: '🌲', title: '매미 소리 가득한 숲속', lines: [
+        { en: 'Summer, summer.', ko: '여름, 여름.' },
+        { en: 'Summer is here.', ko: '여름이 왔어요.' },
+        { en: 'I like summer because I can hear cicadas sing.', ko: '나는 매미가 노래하는 소리를 들을 수 있어서 여름을 좋아해요.' },
+        { en: 'The green trees are very tall.', ko: '초록색 나무들이 아주 키가 커요.' },
+        { en: 'The shade is cool and fresh.', ko: '나무 그늘이 시원하고 상쾌해요.' },
+        { en: 'Summer is my favorite season.', ko: '여름은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['cicada (매미)', 'hear (듣다)', 'shade (그늘)', 'fresh (상쾌한)'] },
+
+      // 가을 5개
+      { season: 'autumn', icon: '🍁', title: '붉게 물든 단풍나무 길', lines: [
+        { en: 'Autumn, autumn.', ko: '가을, 가을.' },
+        { en: 'Autumn is here.', ko: '가을이 왔어요.' },
+        { en: 'I like autumn because I can see red maple leaves.', ko: '나는 붉은 단풍잎을 볼 수 있어서 가을을 좋아해요.' },
+        { en: 'The leaves fall to the ground.', ko: '나뭇잎들이 땅으로 떨어져요.' },
+        { en: 'The sky is high and clear.', ko: '하늘은 높고 맑아요.' },
+        { en: 'Autumn is my favorite season.', ko: '가을은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['maple (단풍나무)', 'leaf (잎/나뭇잎)', 'ground (땅)', 'clear (맑은)'] },
+
+      { season: 'autumn', icon: '🍂', title: '바스락거리는 숲속 산책로', lines: [
+        { en: 'Autumn, autumn.', ko: '가을, 가을.' },
+        { en: 'Autumn is here.', ko: '가을이 왔어요.' },
+        { en: 'I like autumn because I can walk on dry leaves.', ko: '나는 낙엽을 밟으며 걸을 수 있어서 가을을 좋아해요.' },
+        { en: 'They make a crunch sound.', ko: '바스락거리는 소리가 납니다.' },
+        { en: 'The cool breeze touches my face.', ko: '시원한 바람이 내 얼굴을 스쳐요.' },
+        { en: 'Autumn is my favorite season.', ko: '가을은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['walk (걷다)', 'dry (마른)', 'crunch (바스락 소리)', 'touch (스치다/닿다)'] },
+
+      { season: 'autumn', icon: '🌾', title: '황금빛으로 물든 벼 들판', lines: [
+        { en: 'Autumn, autumn.', ko: '가을, 가을.' },
+        { en: 'Autumn is here.', ko: '가을이 왔어요.' },
+        { en: 'I like autumn because I can see golden rice fields.', ko: '나는 황금빛 벼 들판을 볼 수 있어서 가을을 좋아해요.' },
+        { en: 'The yellow fields look like gold.', ko: '노란 들판이 금처럼 보여요.' },
+        { en: 'Farmers smile with happy faces.', ko: '농부들이 행복한 얼굴로 미소 지어요.' },
+        { en: 'Autumn is my favorite season.', ko: '가을은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['golden (황금빛의)', 'rice (벼/쌀)', 'gold (금)', 'farmer (농부)'] },
+
+      { season: 'autumn', icon: '🍎', title: '탐스럽게 익은 사과 과수원', lines: [
+        { en: 'Autumn, autumn.', ko: '가을, 가을.' },
+        { en: 'Autumn is here.', ko: '가을이 왔어요.' },
+        { en: 'I like autumn because I can pick sweet red apples.', ko: '나는 달콤한 빨간 사과를 딸 수 있어서 가을을 좋아해요.' },
+        { en: 'The trees are full of big fruits.', ko: '나무에 큰 열매들이 가득해요.' },
+        { en: 'They taste delicious and fresh.', ko: '아주 맛있고 상쾌한 맛이 나요.' },
+        { en: 'Autumn is my favorite season.', ko: '가을은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['pick (따다)', 'full of (~로 가득한)', 'taste (맛이 나다)', 'delicious (맛있는)'] },
+
+      { season: 'autumn', icon: '🎃', title: '둥근 늙은 호박이 가득한 시골집', lines: [
+        { en: 'Autumn, autumn.', ko: '가을, 가을.' },
+        { en: 'Autumn is here.', ko: '가을이 왔어요.' },
+        { en: 'I like autumn because I can see round pumpkins.', ko: '나는 둥근 호박들을 볼 수 있어서 가을을 좋아해요.' },
+        { en: 'The pumpkins are big and orange.', ko: '호박들은 크고 주황색이에요.' },
+        { en: 'The air is cool and quiet.', ko: '공기가 시원하고 조용해요.' },
+        { en: 'Autumn is my favorite season.', ko: '가을은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['round (둥근)', 'pumpkin (호박)', 'orange (주황색의)', 'quiet (조용한)'] },
+
+      // 겨울 5개
+      { season: 'winter', icon: '☃️', title: '하얗게 눈 내리는 마당', lines: [
+        { en: 'Winter, winter.', ko: '겨울, 겨울.' },
+        { en: 'Winter is here.', ko: '겨울이 왔어요.' },
+        { en: 'I like winter because I can make a big snowman.', ko: '나는 큰 눈사람을 만들 수 있어서 겨울을 좋아해요.' },
+        { en: 'The white snow falls softly.', ko: '하얀 눈이 부드럽게 내려요.' },
+        { en: 'The world looks like a white playground.', ko: '세상이 하얀 놀이터처럼 보여요.' },
+        { en: 'Winter is my favorite season.', ko: '겨울은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['snowman (눈사람)', 'snow (눈)', 'fall (내리다)', 'playground (놀이터)'] },
+
+      { season: 'winter', icon: '🛷', title: '신나는 썰매장', lines: [
+        { en: 'Winter, winter.', ko: '겨울, 겨울.' },
+        { en: 'Winter is here.', ko: '겨울이 왔어요.' },
+        { en: 'I like winter because I can ride a sled.', ko: '나는 썰매를 탈 수 있어서 겨울을 좋아해요.' },
+        { en: 'I slide down the snow hill fast.', ko: '나는 눈 언덕을 빠르게 내려가요.' },
+        { en: 'It is cold, but I feel happy.', ko: '춥지만 나는 행복해요.' },
+        { en: 'Winter is my favorite season.', ko: '겨울은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['sled (썰매)', 'slide down (미끄러지다)', 'hill (언덕)', 'cold (추운)'] },
+
+      { season: 'winter', icon: '♨️', title: '김이 모락모락 나는 군고구마', lines: [
+        { en: 'Winter, winter.', ko: '겨울, 겨울.' },
+        { en: 'Winter is here.', ko: '겨울이 왔어요.' },
+        { en: 'I like winter because I can eat hot sweet potatoes.', ko: '나는 따뜻한 군고구마를 먹을 수 있어서 겨울을 좋아해요.' },
+        { en: 'They are warm and very sweet.', ko: '따뜻하고 정말 달콤해요.' },
+        { en: 'My hands get warm again.', ko: '내 손이 다시 따뜻해져요.' },
+        { en: 'Winter is my favorite season.', ko: '겨울은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['sweet potato (고구마)', 'warm (따뜻한)', 'hand (손)', 'again (다시)'] },
+
+      { season: 'winter', icon: '❄️', title: '창문에 비친 얼음꽃 정원', lines: [
+        { en: 'Winter, winter.', ko: '겨울, 겨울.' },
+        { en: 'Winter is here.', ko: '겨울이 왔어요.' },
+        { en: 'I like winter because I can see ice flowers on the window.', ko: '나는 창문에 핀 얼음꽃을 볼 수 있어서 겨울을 좋아해요.' },
+        { en: 'They shine like little stars.', ko: '작은 별들처럼 반짝여요.' },
+        { en: 'The winter morning is bright and clean.', ko: '겨울 아침은 밝고 깨끗해요.' },
+        { en: 'Winter is my favorite season.', ko: '겨울은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['ice (얼음)', 'window (창문)', 'star (별)', 'morning (아침)'] },
+
+      { season: 'winter', icon: '☕️', title: 'warm 핫초코를 마시는 방안', lines: [
+        { en: 'Winter, winter.', ko: '겨울, 겨울.' },
+        { en: 'Winter is here.', ko: '겨울이 왔어요.' },
+        { en: 'I like winter because I can drink hot chocolate.', ko: '나는 핫초코를 마실 수 있어서 겨울을 좋아해요.' },
+        { en: 'I wear my cozy red sweater.', ko: '나는 포근한 빨간 스웨터를 입어요.' },
+        { en: 'My home is warm and peaceful.', ko: '우리 집은 따뜻하고 평화로워요.' },
+        { en: 'Winter is my favorite season.', ko: '겨울은 내가 가장 좋아하는 계절이에요.' }
+      ], vocab: ['drink (마시다)', 'hot chocolate (핫초코)', 'cozy (포근한)', 'peaceful (평화로운)'] }
+    ];
+
+    let currentPoem = null;
+
+    // Render Cards
+    function renderCards(filterSeason = 'all') {
+      const grid = document.getElementById('cardGrid');
+      grid.innerHTML = '';
+
+      poemsData.forEach((poem, index) => {
+        if (filterSeason !== 'all' && poem.season !== filterSeason) return;
+
+        const card = document.createElement('div');
+        card.className = 'poem-card';
+        card.setAttribute('data-season', poem.season);
+        card.onclick = () => openModal(poem);
+
+        card.innerHTML = `
+          <div class="card-icon">${poem.icon}</div>
+          <div class="card-title">${poem.title}</div>
+          <div class="card-desc">${poem.lines[2].en.substring(0, 32)}...</div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Filter Buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        renderCards(e.target.getAttribute('data-season'));
+      });
+    });
+
+    // Modal Handlers
+    function openModal(poem) {
+      currentPoem = poem;
+      document.getElementById('modalIcon').innerText = poem.icon;
+      document.getElementById('modalTitle').innerText = poem.title;
+
+      const poemLinesDiv = document.getElementById('poemLines');
+      poemLinesDiv.innerHTML = poem.lines.map(line => `
+        <div class="poem-line">
+          <div class="line-en">${line.en}</div>
+          <div class="line-ko">${line.ko}</div>
+        </div>
+      `).join('');
+
+      const vocabTagsDiv = document.getElementById('vocabTags');
+      vocabTagsDiv.innerHTML = poem.vocab.map(v => `
+        <span class="vocab-tag">${v}</span>
+      `).join('');
+
+      document.getElementById('modalOverlay').style.display = 'flex';
+    }
+
+    document.getElementById('closeBtn').onclick = () => {
+      document.getElementById('modalOverlay').style.display = 'none';
+      window.speechSynthesis.cancel();
+    };
+
+    // TTS Function
+    document.getElementById('btnPlayAll').onclick = () => {
+      if (!currentPoem) return;
+      window.speechSynthesis.cancel();
+
+      const fullText = currentPoem.lines.map(l => l.en).join('. ');
+      const utterance = new SpeechSynthesisUtterance(fullText);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85; // 쉬운 학습을 위해 약간 천천히
+      window.speechSynthesis.speak(utterance);
+    };
+
+    // Init
+    renderCards();
+  </script>
+</body>
+</html>
